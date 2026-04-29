@@ -1,0 +1,132 @@
+/* Trend Chart Component Styles */
+.trend-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.trend-chart-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.15);
+}
+
+.trend-chart {
+  overflow: visible;
+}
+
+.trend-chart-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 3px rgba(0, 212, 255, 0.3));
+}
+
+.trend-chart-area {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.trend-chart-point {
+  transition: r 0.2s ease;
+}
+
+.trend-chart-point:hover {
+  r: 5;
+}
+
+.trend-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trend-arrow {
+  font-size: 1rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.trend-text {
+  opacity: 0.9;
+}
+
+/* Placeholder styles */
+.trend-chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: #a0a0a0;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Animation for trend updates */
+@keyframes trendUpdate {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.trend-chart-container.updated {
+  animation: trendUpdate 0.5s ease-out;
+}
+
+/* Color variations for different metrics */
+.trend-chart.cpu-usage .trend-chart-line,
+.trend-chart.cpu-usage .trend-chart-point {
+  stroke: #ff6b6b;
+  fill: #ff6b6b;
+}
+
+.trend-chart.memory-usage .trend-chart-line,
+.trend-chart.memory-usage .trend-chart-point {
+  stroke: #ffd93d;
+  fill: #ffd93d;
+}
+
+.trend-chart.disk-usage .trend-chart-line,
+.trend-chart.disk-usage .trend-chart-point {
+  stroke: #6bcf7f;
+  fill: #6bcf7f;
+}
+
+.trend-chart.network-latency .trend-chart-line,
+.trend-chart.network-latency .trend-chart-point {
+  stroke: #667eea;
+  fill: #667eea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .trend-chart-container {
+    padding: 8px;
+  }
+
+  .trend-indicator {
+    font-size: 0.7rem;
+  }
+
+  .trend-arrow {
+    font-size: 0.9rem;
+  }
+}
