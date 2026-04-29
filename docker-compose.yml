@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------- #
+  # MySQL Database Instance
+  # ----------------------------------------------------------- #
+  mysql-db:
+    image: mysql:8.0
+    container_name: sla_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sla_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  # ----------------------------------------------------------- #
+  # ML Predictions Service (Flask)
+  # ----------------------------------------------------------- #
+  ml-service:
+    build: 
+      context: ./ml-service
+    container_name: sla_ml_service
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+    # Remove the dependency on models existing right away 
+    # to avoid crash loop if models aren't downloaded yet.
+
+  # ----------------------------------------------------------- #
+  # Spring Boot Backend REST
+  # ----------------------------------------------------------- #
+  backend:
+    build: 
+      context: ./backend/backend
+    container_name: sla_backend
+    restart: on-failure
+    depends_on:
+      - mysql-db
+      - ml-service
+    ports:
+      - "8080:8080"
+    environment:
+      # Inject Docker network hostname "mysql-db" for the database
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/sla_db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8080
+      - ML_SERVICE_URL=http://ml-service:5001
+
+  # ----------------------------------------------------------- #
+  # React Frontend (Nginx SPA)
+  # ----------------------------------------------------------- #
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: sla_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db-data:

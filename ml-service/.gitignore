@@ -1,0 +1,6 @@
+# ML specific ignores
+*.pkl
+*.csv
+__pycache__/
+venv/
+.env
