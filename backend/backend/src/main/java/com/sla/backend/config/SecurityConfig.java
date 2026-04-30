@@ -42,7 +42,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001"));
+        // Use Patterns so Vercel Preview Links work seamlessly with AllowCredentials
+        config.setAllowedOriginPatterns(List.of("http://localhost:*", "https://*.vercel.app", "https://*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization", "Content-Type"));
